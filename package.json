@@ -1,9 +1,9 @@
 {
   "name": "ts-proto",
-  "version": "1.110.4",
+  "version": "1.110.5-enum",
   "description": "",
   "main": "build/plugin.js",
-  "repository": "github:stephenh/ts-proto",
+  "repository": "github:stephenjfewer/ts-proto",
   "bin": {
     "protoc-gen-ts_proto": "./protoc-gen-ts_proto"
   },

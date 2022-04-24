@@ -1,9 +1,9 @@
-import { code, def, Code, joinCode } from 'ts-poet';
+import { code, Code, def, joinCode } from 'ts-poet';
 import { EnumDescriptorProto } from 'ts-proto-descriptors';
-import { maybeAddComment } from './utils';
 import { camelCase } from './case';
-import SourceInfo, { Fields } from './sourceInfo';
 import { Context } from './context';
+import SourceInfo, { Fields } from './sourceInfo';
+import { maybeAddComment } from './utils';
 
 const UNRECOGNIZED_ENUM_NAME = 'UNRECOGNIZED';
 const UNRECOGNIZED_ENUM_VALUE = -1;
@@ -45,7 +45,7 @@ export function generateEnum(
   if (options.enumsAsLiterals) {
     chunks.push(code`} as const`);
     chunks.push(code`\n`);
-    chunks.push(code`export type ${def(fullName)} = typeof ${def(fullName)}[keyof typeof ${def(fullName)}]`);
+    chunks.push(code`export type E${def(fullName)} = typeof E${def(fullName)}[keyof typeof E${def(fullName)}]`);
   } else {
     chunks.push(code`}`);
   }
