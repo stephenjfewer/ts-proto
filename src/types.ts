@@ -98,9 +98,11 @@ export function basicTypeName(
         return code`Uint8Array`;
       }
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
+      const messageName = messageToTypeName(ctx, field.typeName, { ...typeOptions, repeated: isRepeated(field) })
+      return messageName;
     case FieldDescriptorProto_Type.TYPE_ENUM:
-      const typeName = messageToTypeName(ctx, field.typeName, { ...typeOptions, repeated: isRepeated(field) })
-      return (options.enumsAsLiterals?code`e${typeName}`:typeName);
+      const enumName = messageToTypeName(ctx, field.typeName, { ...typeOptions, repeated: isRepeated(field) })
+      return (options.enumsAsLiterals?code`e${enumName}`:enumName);
     default:
       return code`${field.typeName}`;
   }
