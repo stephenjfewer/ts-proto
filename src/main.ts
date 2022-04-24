@@ -664,8 +664,8 @@ function generateInterfaceDeclaration(
     const info = sourceInfo.lookup(Fields.message.field, index);
     maybeAddComment(info, chunks, fieldDesc.options?.deprecated);
 
-    const name = (options.enumsAsLiterals?"e":"")+maybeSnakeToCamel(fieldDesc.name, options);
-    const type = toTypeName(ctx, messageDesc, fieldDesc);
+    const name = maybeSnakeToCamel(fieldDesc.name, options);
+    const type = (options.enumsAsLiterals?"e":"")+toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? '?' : '';
     
     chunks.push(code`${name}${q}: ${type}, `);
