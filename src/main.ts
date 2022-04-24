@@ -665,7 +665,7 @@ function generateInterfaceDeclaration(
     maybeAddComment(info, chunks, fieldDesc.options?.deprecated);
 
     const name = maybeSnakeToCamel(fieldDesc.name, options);
-    const type = (options.enumsAsLiterals?"e":"")+toTypeName(ctx, messageDesc, fieldDesc);
+    const type = toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? '?' : '';
     
     chunks.push(code`${name}${q}: ${type}, `);
