@@ -21,7 +21,7 @@ export function generateEnum(
   maybeAddComment(sourceInfo, chunks, enumDesc.options?.deprecated);
 
   if (options.enumsAsLiterals) {
-    chunks.push(code`export const ${def(fullName)} = {`);
+    chunks.push(code`export const e${def(fullName)} = {`);
   } else {
     chunks.push(code`export ${options.constEnums ? 'const ' : ''}enum ${def(fullName)} {`);
   }
@@ -45,7 +45,7 @@ export function generateEnum(
   if (options.enumsAsLiterals) {
     chunks.push(code`} as const`);
     chunks.push(code`\n`);
-    chunks.push(code`export type E${def(fullName)} = typeof E${def(fullName)}[keyof typeof E${def(fullName)}]`);
+    chunks.push(code`export type e${def(fullName)} = typeof e${def(fullName)}[keyof typeof e${def(fullName)}]`);
   } else {
     chunks.push(code`}`);
   }

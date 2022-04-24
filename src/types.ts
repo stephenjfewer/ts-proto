@@ -1,3 +1,4 @@
+import { code, Code, imp, Import } from 'ts-poet';
 import {
   CodeGeneratorRequest,
   DescriptorProto,
@@ -8,15 +9,14 @@ import {
   FileDescriptorProto,
   MessageOptions,
   MethodDescriptorProto,
-  ServiceDescriptorProto,
+  ServiceDescriptorProto
 } from 'ts-proto-descriptors';
-import { code, Code, imp, Import } from 'ts-poet';
-import { DateOption, EnvOption, LongOption, OneofOption, Options } from './options';
-import { visit } from './visit';
-import { fail, FormattedMethodDescriptor, impProto, maybePrefixPackage } from './utils';
-import SourceInfo from './sourceInfo';
 import { camelCase } from './case';
 import { Context } from './context';
+import { DateOption, EnvOption, LongOption, OneofOption, Options } from './options';
+import SourceInfo from './sourceInfo';
+import { fail, FormattedMethodDescriptor, impProto, maybePrefixPackage } from './utils';
+import { visit } from './visit';
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
 export function basicWireType(type: FieldDescriptorProto_Type): number {
@@ -192,7 +192,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       const zerothValue = enumProto.value.find((v) => v.number === 0) || enumProto.value[0];
       if (options.stringEnums) {
         const enumType = messageToTypeName(ctx, field.typeName);
-        return code`${enumType}.${zerothValue.name}`;
+        return code`E${enumType}.${zerothValue.name}`;
       } else {
         return zerothValue.number;
       }

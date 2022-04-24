@@ -1,5 +1,32 @@
 import { code, Code, conditionalOutput, def, imp, joinCode } from 'ts-poet';
+import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 import { DescriptorProto, FieldDescriptorProto, FileDescriptorProto } from 'ts-proto-descriptors';
+import { camelToSnake, capitalize, maybeSnakeToCamel } from './case';
+import { Context } from './context';
+import { generateEnum } from './enums';
+import { generateGenericServiceDefinition } from './generate-generic-service-definition';
+import { generateGrpcJsService } from './generate-grpc-js';
+import {
+  addGrpcWebMisc,
+  generateGrpcClientImpl,
+  generateGrpcMethodDesc,
+  generateGrpcServiceDesc
+} from './generate-grpc-web';
+import {
+  generateNestjsGrpcServiceMethodsDecorator,
+  generateNestjsServiceClient,
+  generateNestjsServiceController
+} from './generate-nestjs';
+import {
+  generateDataLoaderOptionsType,
+  generateDataLoadersType,
+  generateRpcType,
+  generateService,
+  generateServiceClientImpl
+} from './generate-services';
+import { DateOption, EnvOption, LongOption, OneofOption, Options, ServiceOption } from './options';
+import { generateSchema } from './schema';
+import SourceInfo, { Fields } from './sourceInfo';
 import {
   basicLongWireType,
   basicTypeName,
@@ -36,45 +63,14 @@ import {
   packedType,
   toReaderCall,
   toTypeName,
-  valueTypeName,
+  valueTypeName
 } from './types';
-import SourceInfo, { Fields } from './sourceInfo';
 import {
-  assertInstanceOf,
-  getFieldJsonName,
-  FormattedMethodDescriptor,
-  impProto,
+  assertInstanceOf, FormattedMethodDescriptor, getFieldJsonName, getPropertyAccessor, impProto,
   maybeAddComment,
-  maybePrefixPackage,
-  getPropertyAccessor,
+  maybePrefixPackage
 } from './utils';
-import { camelToSnake, capitalize, maybeSnakeToCamel } from './case';
-import {
-  generateNestjsGrpcServiceMethodsDecorator,
-  generateNestjsServiceClient,
-  generateNestjsServiceController,
-} from './generate-nestjs';
-import {
-  generateDataLoaderOptionsType,
-  generateDataLoadersType,
-  generateRpcType,
-  generateService,
-  generateServiceClientImpl,
-} from './generate-services';
-import {
-  addGrpcWebMisc,
-  generateGrpcClientImpl,
-  generateGrpcMethodDesc,
-  generateGrpcServiceDesc,
-} from './generate-grpc-web';
-import { generateEnum } from './enums';
 import { visit, visitServices } from './visit';
-import { DateOption, EnvOption, LongOption, OneofOption, Options, ServiceOption } from './options';
-import { Context } from './context';
-import { generateSchema } from './schema';
-import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
-import { generateGrpcJsService } from './generate-grpc-js';
-import { generateGenericServiceDefinition } from './generate-generic-service-definition';
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -668,9 +664,10 @@ function generateInterfaceDeclaration(
     const info = sourceInfo.lookup(Fields.message.field, index);
     maybeAddComment(info, chunks, fieldDesc.options?.deprecated);
 
-    const name = maybeSnakeToCamel(fieldDesc.name, options);
+    const name = (options.enumsAsLiterals?"e":"")+maybeSnakeToCamel(fieldDesc.name, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? '?' : '';
+    
     chunks.push(code`${name}${q}: ${type}, `);
   });
 
